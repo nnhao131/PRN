@@ -1,0 +1,151 @@
+﻿@page
+@model PageManagement.Pages.PageAccountModel
+@{
+}
+
+
+        <div class="content-page">
+            <div class="content">
+                <!-- Start Content-->
+                <div class="container-fluid">
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box">
+                                <h4 class="page-title">Account List</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- start row -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <table id="scroll-horizontal-datatable" class="table w-100 nowrap">
+                                        <thead>
+                                            <tr class="th-all">
+                                                <th>Account ID</th>
+                                                <th>UserName</th>
+                                                <th>Address</th>
+                                                <th>Phone</th>
+                                                <th>Role</th>
+                                                <th>Status</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                @foreach (var item in Model.users)
+                                {
+                                    <tbody>
+                                        <tr class="td-all2">
+                                            <td>@item.Id</td>
+                                            <td>@item.Username</td>
+                                            <td>@item.Address</td>
+                                            <td>@item.Phonenumber</td>
+                                            <td>User</td>
+                                            @if(item.Status == false)
+                                            {
+                                                <td style="color:green">True</td>
+                                            }else
+                                            {
+                                                <td style="color:red"> False</td>
+                                            }
+                                            <td class="btn-all2">
+                                                <div class="btn-all">
+                                                    <div class="col-4">
+                                                        <div class="mt-3">
+                                                            <div class="button-list">
+                                                                @if(item.Status == false)
+                                                                {
+                                                                    @Html.AntiForgeryToken()
+                                                                    <button type="button"
+                                                                            class="btn btn-danger waves-effect waves-light mr-1" data-user-id="@item.Id" id="GetDelete">
+                                                                        <i class="la la-ban"></i>
+                                                                    </button>
+                                                                    
+                                                                }else
+                                                                {
+
+                                                                    @Html.AntiForgeryToken()
+                                                                    <button type="button"
+                                                                            class="btn btn-success waves-effect waves-light mr-1" data-user-id="@item.Id" id="GetRefund">
+                                                                        <i class="la la-check-circle  "></i>
+                                                                    </button>
+                                                                }
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            
+                                        </tr>
+                                    </tbody>
+                                }
+                                    </table>
+                                </div> <!-- end card body-->
+                            </div> <!-- end card -->
+                        </div><!-- end col-->
+                    </div>
+                    <!-- end row -->
+
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+
+                $(document).ready(function () {
+                    $("[id^='GetDelete']").click(function () {
+                        var userid = $(this).data("user-id");
+                        var token = $('input[name="__RequestVerificationToken"]').val();
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/PageAccount?handler=Lock",
+                            data: { id: userid, __RequestVerificationToken: token },
+                            success: function (data) {
+                               
+                                toastr.success("Successfully");
+                                reloadData();
+                            },
+                            error: function (error) {
+                                toastr.warning("Fail");
+                                
+                                console.error("Có lỗi xảy ra: " + error.statusText);
+                            }
+                        });
+                    });
+
+                });
+                $(document).ready(function () {
+                    $("[id^='GetRefund']").click(function () {
+                        var userid = $(this).data("user-id");
+                        var token = $('input[name="__RequestVerificationToken"]').val();
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/PageAccount?handler=UnLock",
+                            data: { id: userid, __RequestVerificationToken: token },
+                            success: function (data) {
+
+                                toastr.success("Successfully");
+                                reloadData();
+                            },
+                            error: function (error) {
+                                toastr.warning("Fail");
+
+                                console.error("Có lỗi xảy ra: " + error.statusText);
+                            }
+                        });
+                    });
+
+                });
+                function reloadData() {
+
+                    setTimeout(function () {
+                        $.get("/PageOrder", function (data) {
+                            // Cập nhật phần tử có id là "your-table-container" với dữ liệu mới
+                            location.reload(true);
+                            $("#scroll-horizontal-datatable").html(data);
+                        });
+                    }, 1000);
+                }
+
+  </script>                

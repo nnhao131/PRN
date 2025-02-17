@@ -1,0 +1,72 @@
+﻿@page "/login"
+@model BookSellingApp.Pages.Login.LoginModel
+@{
+    Layout = "_Layout";
+}
+<!-- Breadcrumb Start -->
+<div class="breadcrumb-area mt-30">
+    <div class="container">
+        <div class="breadcrumb">
+            <ul class="d-flex align-items-center">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="register.html">account</a></li>
+                <li class="active"><a href="contact.html">contact us</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Container End -->
+</div>
+<!-- Breadcrumb End -->
+<!-- LogIn Page Start -->
+<div class="log-in ptb-100 ptb-sm-60">
+    <div class="container">
+        <div class="row">
+            <!-- New Customer Start -->
+            <div class="col-md-6">
+                <div class="well mb-sm-30">
+                    <div class="new-customer">
+                        <h3 class="custom-title">new customer</h3>
+                        <p class="mtb-10"><strong>Register</strong></p>
+                        <p>By creating an account you will be able to shop faster, be up to date on an order's status, and keep track of the orders you have previously made</p>
+                        <a class="customer-btn" asp-page="/Login/Register">continue</a>
+                    </div>
+                </div>
+            </div>
+            <!-- New Customer End -->
+            <!-- Returning Customer Start -->
+            <div class="col-md-6">
+                <div class="well">
+                    <div class="return-customer">
+                        <h3 class="mb-10 custom-title">Returning customer</h3>
+                        <p class="mb-10"><strong>I am a returning customer</strong></p>
+                        <form method="post">
+                            <div class="form-group">
+                                <label asp-for="input.Username"></label>
+                                <input type="text" name="username" placeholder="Enter your User name" id="input-email" class="form-control" asp-for="input.Username">
+                                <span asp-validation-for="input.Username" class="text-danger"></span>
+
+
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="input.Password"></label>
+                                <input type="password" name="password" placeholder="Password" id="input-password" class="form-control" asp-for="input.Password">
+                                <span asp-validation-for="input.Password" class="text-danger"></span>
+
+                            </div>
+                            <p class="lost-password"><a asp-page="/Login/Forgot">Forgot password?</a></p>
+                            @if (TempData["ErrorMsg"] != null)
+                            {
+                                <p class="text-danger">@TempData["ErrorMsg"]</p>
+                            }
+                            <input type="submit" value="Login" class="return-customer-btn">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Returning Customer End -->
+        </div>
+        <!-- Row End -->
+    </div>
+    <!-- Container End -->
+</div>
+<!-- LogIn Page End -->

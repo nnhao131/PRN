@@ -1,0 +1,378 @@
+﻿@page
+@model PageManagement.Pages.PageCategoryModel
+@{
+}
+<div class="content-page">
+    <div class="content">
+        <!-- Start Content-->
+        <div class="container-fluid">
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <h4 class="page-title">Category List</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card-box">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="text-lg-right mt-3 mt-lg-0">
+                                    <div class="button-list2">
+                                        <button type="button" class="btn btn-danger waves-effect waves-light"
+                                                data-toggle="modal" data-target="#full-create">
+                                            <i class="mdi mdi-plus-circle mr-1"></i>Add new
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- start row -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="scroll-horizontal-datatable" class="table w-100 nowrap" >
+                                <thead>
+                                    <tr class="th-all">
+                                        <th>Category ID</th>
+                                        <th>Category name</th>
+                                        <th>Description</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                @foreach(var item in Model.category)
+                                {
+                                    <tbody>
+                                        <tr class="td-all3">
+                                            <td>@item.Id</td>
+                                            <td>@item.CategoryName</td>
+                                            <td>@item.Description</td>
+                                            <td class="btn-all4">
+                                                <div class="btn-all">
+                                                    <div class="col-4">
+                                                        <div class="mt-3">
+                                                            <div class="button-list">
+                                                                <button type="button"
+                                                                        class="btn btn-success waves-effect waves-light mr-1" id="GetUpdate" data-cate-id="@item.Id"
+                                                                        data-toggle="modal" data-target="#full-edit">
+                                                                    <i class="fe-edit-2"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="mt-3">
+                                                            <div class="button-list">
+                                                                <button type="button"
+                                                                        class="btn btn-danger waves-effect waves-light mr-1"
+                                                                        data-toggle="modal" data-target="#full-delete" data-cate-id="@item.Id" id="GetDelete">
+                                                                    <i class="mdi mdi-delete-forever"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                }
+                                
+                            </table>
+                        </div> <!-- end card body-->
+                    </div> <!-- end card -->
+                </div><!-- end col-->
+            </div>
+            <!-- end row -->
+            <!-- full create -->
+            <div id="full-create" class="modal fade" tabindex="-1" role="dialog"
+                 aria-labelledby="full-width-modalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog modal-full">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="full-width-modalLabel">Category Create</h4>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">
+                                ×
+                            </button>
+                        </div>
+                        <form method="post" id="cateForm">
+                        <div class="modal-body">
+                          
+                                <div class="form-control-element">
+                                    <div class="form-group">
+                                       
+                                        <input type="hidden" class="form-control" id="name" name="cateID" placeholder="Enter ID"
+                                               required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Category Name:</label>
+                                        <input type="text" class="form-control" id="location"
+                                               placeholder="Enter location" name="Catename" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="price">Category Status:</label>
+                                        <input type="text" class="form-control" id="name"
+                                               placeholder="Enter name" required name="Description">
+                                    </div>
+                                </div>
+
+                           
+                        </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary waves-effect"
+                                        data-dismiss="modal">
+                                    Close
+                                </button>
+                                <button type="button" id="ButtonCreate" class="btn btn-primary waves-effect waves-light">
+                                    Save
+                                    changes
+                                </button>
+                            </div>
+                        </form>
+                       
+                    </div>
+                </div>
+            </div>
+            <!-- full edit -->
+            <div id="full-edit" class="modal fade" tabindex="-1" role="dialog"
+                 aria-labelledby="full-width-modalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog modal-full">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="full-width-modalLabel">Category Edit</h4>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">
+                                ×
+                            </button>
+                        </div>
+                        <form method="post" id="UpdateForm">
+                        <div class="modal-body">
+                           
+                                <div class="form-control-element">
+                                    <div class="form-group">
+                                        
+                                        <input type="hidden" class="form-control" id="name" name="cateID" placeholder="Enter ID"
+                                               required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Category Name:</label>
+                                        <input type="text" class="form-control" id="location" name="cateName"
+                                               placeholder="Enter location" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="price">Category Description:</label>
+                                        <input type="text" class="form-control" id="name" name="description"
+                                               placeholder="Enter name" required>
+                                    </div>
+                                </div>
+
+                            
+                        </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary waves-effect"
+                                        data-dismiss="modal">
+                                    Close
+                                </button>
+                                <button type="button" class="btn btn-primary waves-effect waves-light" id="SaveChangesButton">
+                                    Save
+                                    changes
+                                </button>
+                            </div>
+                        </form>
+                       
+                    </div>
+                </div>
+            </div>
+            <!-- full-delete -->
+            <div id="full-delete" class="modal fade" tabindex="-1" role="dialog"
+                 aria-labelledby="full-width-modalLabel" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog modal-full">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="full-width-modalLabel">Category Delete</h4>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">
+                                ×
+                            </button>
+                        </div>
+                        
+                        <form method="post" id="DeleteForm">
+                        <div class="modal-body" >
+                           
+                                <div class="form-details">
+                                    <div class="element-1">
+                                        <div class="form-group">
+
+                                            <input type="hidden" class="form-control" id="myId" name="cateID"
+                                                   required>
+                                        </div>
+                                        <div class="ele-details">
+                                            <div class="ele">
+                                                <h4 class="mt-3">Category Name:</a></h4>
+                                               
+                                            </div>
+                                            <div class="ele">
+                                                <h4 class="mt-3">Category Description:</h4>
+                                               
+                                            </div>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+                           
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary waves-effect"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+                            <button type="button" id="DeleteButtom" class="btn btn-danger waves-effect waves-light">Delete</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div> <!-- content -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+        //---------------------------Update
+        $(document).ready(function () {
+            $("[id^='GetUpdate']").click(function () {
+                var cateid = $(this).data("cate-id");
+                $("#cateID").val(cateid);
+                $.ajax({
+                    type: "GET",
+                    url: "/PageCategory?handler=Update",
+                    data: { id: cateid },
+                    success: function (data) {
+                        $("#UpdateForm input[name='cateID']").val(cateid);
+                        $("#UpdateForm input[name='cateName']").val(data.model.categoryName);
+                        $("#UpdateForm input[name='description']").val(data.model.description);
+                        $("#full-edit").modal("show");
+                    },
+                    error: function (error) {
+                        console.error("Có lỗi xảy ra: " + error.statusText);
+                    }
+                });
+            });
+           
+        });
+        document.getElementById("SaveChangesButton").addEventListener("click", function () {
+            var form = document.getElementById("UpdateForm");
+            var formData = new FormData(form);
+
+            // Đóng modal bằng cách sử dụng .modal("hide")
+            $("#full-edit").modal("hide");
+
+            $.ajax({
+                type: "POST",
+                url: "/PageCategory?handler=Update",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    toastr.success("Successfully");
+                    reloadData();
+                    
+                },
+                error: function (error) {
+                    toastr.warning("Successfully");
+                    console.error("Có lỗi xảy ra: " + error.statusText);
+                }
+            });
+        });
+
+        ///-------------------------End
+        //-----------------------------delete
+        $(document).ready(function () {
+            $("[id^='GetDelete']").click(function () {
+                var cateId = $(this).data("cate-id");
+                $("#cateId").val(cateId);
+                $.ajax({
+                    type: "GET",
+                    url: "/PageCategory?handler=Delete",
+                    data: { id: cateId },
+                    success: function (data) {
+                        // Cập nhật thông tin sản phẩm trong modal
+                        $("#DeleteForm input[name='cateID']").val(cateId);
+                        var cate = data.model;
+                        $(".ele h4").eq(0).text("Category Name: " + cate.categoryName);
+                        $(".ele h4").eq(1).text("Category Description: " + cate.description);
+
+                        console.log("data: " + JSON.stringify(data));
+                        $("#full-delete").modal("show");
+                    },
+                    error: function (error) {
+                        console.log("data:1 " + cateId);
+                        console.log("data:" + data);
+                        console.error("Có lỗi xảy ra: " + error.statusText);
+                    }
+                });
+            });
+        });
+        document.getElementById("DeleteButtom").addEventListener("click", function () {
+            var cateid = document.getElementById("myId").value;
+            var csrfToken = $('input[name="__RequestVerificationToken"]').val();
+            $.ajax({
+                type: "POST",
+                url: "/PageCategory?handler=Delete",
+                data: { id: cateid, __RequestVerificationToken: csrfToken },
+                success: function (data) {
+
+                    
+                    // Đóng modal sau khi xóa thành công
+                    $("#full-delete").modal("hide");
+                    toastr.success("Successfully");
+                    reloadData();
+                },
+                error: function (error) {
+                    toastr.warning("Delete Fail");
+                    console.log("cateid: " + cateid);
+                    console.error("Có lỗi xảy ra: " + error.statusText);
+                }
+            });
+        });
+
+        //--------------------------end
+        //-------------------------------------Create
+        document.getElementById("ButtonCreate").addEventListener("click", function () {
+            var form = document.getElementById("cateForm");
+            var formData = new FormData(form);
+            $("#full-create").modal("hide");
+            $.ajax({
+                type: "POST",
+                url: "/PageCategory",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    toastr.success("Successfully");
+                    reloadData();
+                },
+                error: function (error) {
+                    console.error("Có lỗi xảy ra: " + error.statusText);
+                }
+            });
+        });
+        //---------------------------end
+        function reloadData() {
+
+            $.get("/PageProducts", function (data) {
+                // Cập nhật phần tử có id là "your-table-container" với dữ liệu mới
+                location.reload(true);
+                $("#scroll-horizontal-datatable").html(data);
+            });
+        }
+    </script>
+   

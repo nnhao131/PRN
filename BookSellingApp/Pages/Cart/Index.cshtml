@@ -1,0 +1,170 @@
+﻿@page
+@model BookSellingApp.Pages.Cart.IndexModel
+@{
+    Layout = "_Layout";
+}
+
+
+
+<!-- Cart Main Area Start -->
+<div class="cart-main-area ptb-100 ptb-sm-60">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <!-- Form Start -->
+                <form action="#">
+                    <!-- Table Content Start -->
+                    <div class="table-content table-responsive mb-45">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="product-thumbnail">Image</th>
+                                    <th class="product-name">Product</th>
+                                    <th class="product-price">Price</th>
+                                    <th class="product-quantity">Quantity</th>
+                                    <th class="product-subtotal">Total</th>
+                                    <th class="product-remove">Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.cart != null && Model.cart.Count > 0)
+                                {
+                                    
+                                    @foreach (var item in Model.cart)
+                                    {
+                                        <tr>
+                                            @foreach(var img in Model.proview)
+                                            {
+                                                @if (item.ProductId == img.Id)
+                                                {
+                                                    <td class="product-thumbnail">
+                                                        <a ><img src="data:image/png;base64,@Convert.ToBase64String(img.Image)" alt="cart-image"></a>
+                                                    </td>
+                                                }
+                                            }
+                                            
+                                            
+                                            <td class="product-name"><a href="#">@item.ProductName</a></td>
+                                            <td class="product-price"><span class="amount">@item.Price</span></td>
+                                            @Html.AntiForgeryToken()
+                                            <td  class="product-quantity">
+                                                <input type="number" value="@item.Quantity" data-product-id="@item.ProductId" style="border-radius:5px;box-shadow:#000000; background-color:#E1DADA">
+                                                <button style="border-radius:5px; background-color:#ffffff" class="update-quantity-button" data-product-id="@item.ProductId">Update</button>
+                                            </td>
+                                            <td class="product-subtotal">@(item.Price * item.Quantity)</td>
+                                            @Html.AntiForgeryToken()
+                                            <td class="product-remove">
+                                                <button class="remove-from-cart" data-product-id="@item.ProductId" style="border-radius:5px; background-color:#ffffff">
+                                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        
+                                        
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4">Your cart is empty.</td>
+                                    </tr>
+                                }
+                                
+                              
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Table Content Start -->
+                    <div class="row">
+                        <!-- Cart Button Start -->
+                        <div class="col-md-8 col-sm-12">
+                            <div class="buttons-cart">
+                                <input type="hidden" value="Update Cart">
+                               
+                            </div>
+                        </div>
+                        <!-- Cart Button Start -->
+                        <!-- Cart Totals Start -->
+                        <div class="col-md-4 col-sm-12">
+                            <div class="cart_totals float-md-right text-md-right">
+                                <h2>Cart Totals</h2>
+                                <br>
+                                <table class="float-md-right">
+                                    <tbody>
+                                        
+                                        <tr class="order-total">
+                                            <th>Total</th>
+                                            <td>
+                                                <strong><span class="amount">@Model.cartTotal</span></strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="wc-proceed-to-checkout">
+                                    <a asp-page="/Cart/checkout">Proceed to Checkout</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Cart Totals End -->
+                    </div>
+                    <!-- Row End -->
+                </form>
+                <!-- Form End -->
+            </div>
+        </div>
+        <!-- Row End -->
+    </div>
+</div>
+<!-- Cart Main Area End -->
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $(".remove-from-cart").click(function () {
+                var productId = $(this).data("product-id");
+                var token = $('input[name="__RequestVerificationToken"]').val(); // Lấy mã thông báo CSRF
+                $.ajax({
+                    url: "/Cart?handler=RemoveFromCart", // Đúng đường dẫn của action RemoveFromCart
+                    type: "POST",
+                    data: { productId: productId, __RequestVerificationToken: token },
+                    success: function () {
+                        
+                        $(this).closest("tr").remove(); // Xóa hàng hiển thị sản phẩm khỏi giỏ hàng
+                        toastr.success("Remove Cart Successfully");
+                    },
+                    error: function (error) {
+                        console.error("Lỗi khi xóa sản phẩm: " + error.responseText);
+                    }
+                });
+            });
+        });
+        $(document).ready(function () {
+            // Gán sự kiện cho nút "Update"
+            $('.update-quantity-button').on('click', function () {
+                var productId = $(this).data('product-id');
+                var quantity = $(this).siblings('input[type="number"]').val();
+                var token = $('input[name="__RequestVerificationToken"]').val();
+
+                // Gửi yêu cầu AJAX để cập nhật sản phẩm
+                $.ajax({
+                    url: '/Cart?handler=UpdateFromCart', // Điều chỉnh đúng đường dẫn của bạn
+                    type: 'POST',
+                    data: {
+                        productId: productId,
+                        quantity: quantity,
+                        __RequestVerificationToken: token
+                    },
+                    success: function (data) {
+                        toastr.success("Update to Cart Successfully");
+                    },
+                    error: function () {
+                        // Xử lý lỗi nếu cần
+                        console.log('Có lỗi xảy ra khi cập nhật sản phẩm.');
+                    }
+                });
+            });
+        });
+
+
+
+    </script>
+}
