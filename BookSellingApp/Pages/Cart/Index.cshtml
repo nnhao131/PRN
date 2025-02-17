@@ -3,6 +3,42 @@
 @{
     Layout = "_Layout";
 }
+<style>
+.quantity-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px; /* Tăng khoảng cách giữa các phần tử */
+}
+
+.quantity-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background-color: #e0e0e0;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.quantity-btn:hover {
+    background-color: #d0d0d0;
+}
+
+.quantity-btn:active {
+    transform: scale(0.9);
+}
+
+.quantity-display {
+    min-width: 40px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+</style>
 
 
 
@@ -23,13 +59,11 @@
                                     <th class="product-price">Price</th>
                                     <th class="product-quantity">Quantity</th>
                                     <th class="product-subtotal">Total</th>
-                                    <th class="product-remove">Remove</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if (Model.cart != null && Model.cart.Count > 0)
                                 {
-                                    
                                     @foreach (var item in Model.cart)
                                     {
                                         <tr>
@@ -42,14 +76,15 @@
                                                     </td>
                                                 }
                                             }
-                                            
-                                            
                                             <td class="product-name"><a href="#">@item.ProductName</a></td>
                                             <td class="product-price"><span class="amount">@item.Price</span></td>
                                             @Html.AntiForgeryToken()
-                                            <td  class="product-quantity">
-                                                <input type="number" value="@item.Quantity" data-product-id="@item.ProductId" style="border-radius:5px;box-shadow:#000000; background-color:#E1DADA">
-                                                <button style="border-radius:5px; background-color:#ffffff" class="update-quantity-button" data-product-id="@item.ProductId">Update</button>
+                                            <td class="product-quantity">
+                                                <div class="quantity-wrapper">
+                                                    <button class="quantity-btn decrease" data-product-id="@item.ProductId">−</button>
+                                                    <span class="quantity-display" data-product-id="@item.ProductId">@item.Quantity</span>
+                                                    <button class="quantity-btn increase" data-product-id="@item.ProductId">+</button>
+                                                </div>
                                             </td>
                                             <td class="product-subtotal">@(item.Price * item.Quantity)</td>
                                             @Html.AntiForgeryToken()
@@ -59,8 +94,6 @@
                                                 </button>
                                             </td>
                                         </tr>
-                                        
-                                        
                                     }
                                 }
                                 else
@@ -69,8 +102,6 @@
                                         <td colspan="4">Your cart is empty.</td>
                                     </tr>
                                 }
-                                
-                              
                             </tbody>
                         </table>
                     </div>
@@ -118,52 +149,120 @@
 <!-- Cart Main Area End -->
 @section scripts{
     <script>
-        $(document).ready(function () {
-            $(".remove-from-cart").click(function () {
-                var productId = $(this).data("product-id");
-                var token = $('input[name="__RequestVerificationToken"]').val(); // Lấy mã thông báo CSRF
-                $.ajax({
-                    url: "/Cart?handler=RemoveFromCart", // Đúng đường dẫn của action RemoveFromCart
-                    type: "POST",
-                    data: { productId: productId, __RequestVerificationToken: token },
-                    success: function () {
-                        
-                        $(this).closest("tr").remove(); // Xóa hàng hiển thị sản phẩm khỏi giỏ hàng
-                        toastr.success("Remove Cart Successfully");
-                    },
-                    error: function (error) {
-                        console.error("Lỗi khi xóa sản phẩm: " + error.responseText);
-                    }
-                });
-            });
-        });
-        $(document).ready(function () {
-            // Gán sự kiện cho nút "Update"
-            $('.update-quantity-button').on('click', function () {
-                var productId = $(this).data('product-id');
-                var quantity = $(this).siblings('input[type="number"]').val();
-                var token = $('input[name="__RequestVerificationToken"]').val();
+$(document).ready(function () {
+    // Xóa sản phẩm khỏi giỏ hàng mà không reload trang
+    $(".remove-from-cart").click(function (e) {
+        e.preventDefault(); // Ngăn chặn reload trang
+        var productId = $(this).data("product-id");
+        var token = $('input[name="__RequestVerificationToken"]').val();
+        var button = $(this);
 
-                // Gửi yêu cầu AJAX để cập nhật sản phẩm
-                $.ajax({
-                    url: '/Cart?handler=UpdateFromCart', // Điều chỉnh đúng đường dẫn của bạn
-                    type: 'POST',
-                    data: {
-                        productId: productId,
-                        quantity: quantity,
-                        __RequestVerificationToken: token
-                    },
-                    success: function (data) {
-                        toastr.success("Update to Cart Successfully");
-                    },
-                    error: function () {
-                        // Xử lý lỗi nếu cần
-                        console.log('Có lỗi xảy ra khi cập nhật sản phẩm.');
-                    }
-                });
-            });
+        $.ajax({
+            url: "/Cart?handler=RemoveFromCart",
+            type: "POST",
+            data: { productId: productId, __RequestVerificationToken: token },
+            success: function () {
+                button.closest("tr").remove();
+                toastr.success("Removed from cart successfully.");
+                updateCartTotal();
+            },
+            error: function (error) {
+                console.error("Error removing product: " + error.responseText);
+            }
         });
+    });
 
+    // Cập nhật số lượng khi thay đổi input
+    $(".quantity-input").on("change", function () {
+        updateQuantity($(this));
+    });
+
+    // Giảm số lượng sản phẩm
+    $(".quantity-decrease").click(function (e) {
+        e.preventDefault();
+        var input = $(this).siblings(".quantity-input");
+        var currentValue = parseInt(input.val());
+
+        if (currentValue > 1) {
+            input.val(currentValue - 1);
+            updateQuantity(input);
+        }
+    });
+
+    // Tăng số lượng sản phẩm
+    $(".quantity-increase").click(function (e) {
+        e.preventDefault();
+        var input = $(this).siblings(".quantity-input");
+        var currentValue = parseInt(input.val());
+        input.val(currentValue + 1);
+        updateQuantity(input);
+    });
+
+    // Hàm cập nhật số lượng không reload trang
+    function updateQuantity(input) {
+        var productId = input.data("product-id");
+        var quantity = input.val();
+        var token = $('input[name="__RequestVerificationToken"]').val();
+
+        // Đảm bảo số lượng không nhỏ hơn 1
+        if (quantity < 1) {
+            input.val(1);
+            quantity = 1;
+        }
+
+        $.ajax({
+            url: '/Cart?handler=UpdateFromCart',
+            type: 'POST',
+            data: { productId: productId, quantity: quantity, __RequestVerificationToken: token },
+            success: function () {
+                toastr.success("Cart updated successfully.");
+                updateCartTotal();
+            },
+            error: function () {
+                console.log('Error updating product quantity.');
+            }
+        });
+    }
+
+    // Cập nhật tổng giá trị giỏ hàng sau khi cập nhật số lượng hoặc xóa sản phẩm
+    function updateCartTotal() {
+        var total = 0;
+        $(".product-subtotal").each(function () {
+            total += parseFloat($(this).text());
+        });
+        $(".order-total .amount").text(total.toFixed(2));
+    }
+});
+
+//update quantity not reload page
+$(document).ready(function () {
+    $(".quantity-btn").on("click", function (event) {
+        event.preventDefault(); // 🔥 Chặn mọi hành động mặc định để tránh reload
+        
+        var productId = $(this).data("product-id");
+        var isIncrease = $(this).hasClass("increase");
+        var displayElement = $(".quantity-display[data-product-id='" + productId + "']");
+        var currentQuantity = parseInt(displayElement.text());
+        var newQuantity = isIncrease ? currentQuantity + 1 : Math.max(1, currentQuantity - 1); // Không giảm dưới 1
+
+        displayElement.text(newQuantity); // Cập nhật UI ngay lập tức
+
+        var token = $('input[name="__RequestVerificationToken"]').val();
+
+        // Gửi AJAX cập nhật số lượng nhưng không reload trang
+        $.ajax({
+            url: '/Cart?handler=UpdateFromCart',
+            type: 'POST',
+            data: { productId: productId, quantity: newQuantity, __RequestVerificationToken: token },
+            success: function () {
+                toastr.success("Cart updated successfully.");
+            },
+            error: function () {
+                console.error('Error updating product quantity.');
+            }
+        });
+    });
+});
 
 
     </script>
