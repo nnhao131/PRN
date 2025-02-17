@@ -1,0 +1,285 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+@using Azure.Core;
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor h
+<div class="main-page-banner black-bg2 home-3">
+    <!-- Slider Area Start Here -->
+    <div class="slider_box">
+        <div class="slider-wrapper theme-default">
+            <!-- Slider Background  Image Start-->
+            <div id="slider" class="nivoSlider">
+                <a href="/Products"><img src="img\slider\5.jpg" data-thumb="img/slider/5.jpg" alt="" title="#htmlcaption"></a>
+                <a href="/Products"><img src="img\slider\5.jpg" data-thumb="img/slider/5.jpg" alt="" title="#htmlcaption2"></a>
+            </div>
+            <!-- Slider Background  Image Start-->
+        </div>
+    </div>
+</div>
+        
+<!-- Hot Deal Products Start Here -->
+<div class="hot-deal-products off-white-bg pb-90 pb-sm-50">
+    <div class="container">
+        <!-- Product Title Start -->
+        <div class="post-title pb-30">
+            <h2>hot deals</h2>
+        </div>
+        <!-- Product Title End -->
+        <!-- Hot Deal Product Activation Start -->
+        <div class="hot-deal-active owl-carousel">
+            <!-- Single Product Start -->
+            @foreach(var item in Model.products){
+            <div class="single-product">
+                <!-- Product Image Start -->
+                <div class="pro-img">
+                        <a asp-page="/Products/ProductDetail" asp-route-id="@item.Id">
+                            @if (item.Image != null && @item.Image.Length > 0)
+                            {
+                                <img class="primary-img" src="data:image/png;base64,@Convert.ToBase64String(item.Image)" alt="single-product">
+                                <img class="secondary-img" src="data:image/png;base64,@Convert.ToBase64String(item.Image)" alt="single-product">
+                            }
+                            else
+                            {
+                                <img class="primary-img" src="" alt="single-product">
+                                <img class="secondary-img" src="" alt="single-product">
+                            }
+
+                        </a>
+                    
+                   
+                </div>
+                <!-- Product Image End -->
+                <!-- Product Content Start -->
+                <div class="pro-content">
+                    <div class="pro-info">
+                        <h4><a href="product.html">@item.ProductName</a></h4>
+                        <p><span class="price">@item.Price</span></p>
+                        
+                    </div>
+                    <div class="pro-actions">
+
+                         @Html.AntiForgeryToken()
+                        <div class="actions-primary">
+                                <a class="add-to-cart" data-product-id="@item.Id" title="Add to Cart"> + Add To Cart</a>
+
+                        </div>
+                       
+                    </div>
+                </div>
+                <!-- Product Content End -->
+            </div>
+            }
+            <!-- Single Product End -->
+          
+        </div>
+        <!-- Hot Deal Product Active End -->
+
+    </div>
+    <!-- Container End -->
+</div>
+<!-- Hot Deal Products End Here -->
+</br>
+<!-- Arrivals Products Area Start Here -->
+<div class="second-arrivals-product pb-45 pb-sm-5">
+    <div class="container">
+        <div class="main-product-tab-area">
+            <div class="tab-menu mb-25">
+                <div class="section-ttitle">
+                    <h2>Best Seller</h2>
+                </div>
+                <!-- Nav tabs -->
+                <ul class="nav tabs-area" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#electronics2">Self-Help </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#fshion2">Fiction</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#fshion3">Science</a>
+                    </li>
+                    
+                </ul>
+
+            </div>
+
+            <!-- Tab Contetn Start -->
+            <div class="tab-content">
+                <div id="electronics2" class="tab-pane fade show active">
+                    <!-- Arrivals Product Activation Start Here -->
+                    <div class="best-seller-pro-active owl-carousel">
+                        <!-- Single Product Start -->
+                        @foreach(var item in Model.cate1)
+                        {
+                            <div class="single-product">
+                                <!-- Product Image Start -->
+                                <div class="pro-img">
+                                    <a asp-page="/Products/ProductDetail" asp-route-id="@item.Id">
+                                        @if (item.Image != null && @item.Image.Length > 0)
+                                        {
+                                            <img class="primary-img" src="data:image/png;base64,@Convert.ToBase64String(item.Image)" alt="single-product">
+                                            <img class="secondary-img" src="data:image/png;base64,@Convert.ToBase64String(item.Image)" alt="single-product">
+                                        }
+                                        else
+                                        {
+                                            <img class="primary-img" src="" alt="single-product">
+                                            <img class="secondary-img" src="" alt="single-product">
+                                        }
+                                    </a>
+                                   
+                                </div>
+                                <!-- Product Image End -->
+                                <!-- Product Content Start -->
+                                <div class="pro-content">
+                                    <div class="pro-info">
+                                        <h4><a href="#">@item.ProductName</a></h4>
+                                        <p><span class="price">$@item.Price</span></p>
+                                    </div>
+                                    <div class="pro-actions">
+                                        @Html.AntiForgeryToken()
+                                        <div class="actions-primary">
+                                            <a class="add-to-cart" data-product-id="@item.Id" title="Add to Cart"> + Add To Cart</a>
+
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <!-- Product Content End -->
+                            </div>
+                        }
+                        
+                        <!-- Single Product End -->
+                        
+                        
+                    </div>
+                    <!-- Arrivals Product Activation End Here -->
+                </div>
+                <!-- #electronics End Here -->
+                <div id="fshion2" class="tab-pane fade">
+                    <!-- Arrivals Product Activation Start Here -->
+                    <div class="best-seller-pro-active owl-carousel">
+                        @foreach (var item in Model.cate2)
+                        {
+                            <div class="single-product">
+                                <!-- Product Image Start -->
+                                <div class="pro-img">
+                                    <a asp-page="/Products/ProductDetail" asp-route-id="@item.Id">
+                                        @if (item.Image != null && @item.Image.Length > 0)
+                                        {
+                                            <img class="primary-img" src="data:image/png;base64,@Convert.ToBase64String(item.Image)" alt="single-product">
+                                            <img class="secondary-img" src="data:image/png;base64,@Convert.ToBase64String(item.Image)" alt="single-product">
+                                        }
+                                        else
+                                        {
+                                            <img class="primary-img" src="" alt="single-product">
+                                            <img class="secondary-img" src="" alt="single-product">
+                                        }
+                                    </a>
+
+                                </div>
+                                <!-- Product Image End -->
+                                <!-- Product Content Start -->
+                                <div class="pro-content">
+                                    <div class="pro-info">
+                                        <h4><a href="#">@item.ProductName</a></h4>
+                                        <p><span class="price">$@item.Price</span></p>
+                                    </div>
+                                    <div class="pro-actions">
+                                        @Html.AntiForgeryToken()
+                                        <div class="actions-primary">
+                                            <a class="add-to-cart" data-product-id="@item.Id" title="Add to Cart"> + Add To Cart</a>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- Product Content End -->
+                            </div>
+                        }
+                        <!-- Single Product End -->
+                    </div>
+                    <!-- Arrivals Product Activation End Here -->
+                </div>
+                <!-- #fshion End Here -->
+                <!-- #electronics End Here -->
+                <div id="fshion3" class="tab-pane fade">
+                    <!-- Arrivals Product Activation Start Here -->
+                    <div class="best-seller-pro-active owl-carousel">
+                        @foreach (var item in Model.cate3)
+                        {
+                            <div class="single-product">
+                                <!-- Product Image Start -->
+                                <div class="pro-img">
+                                    <a asp-page="/Products/ProductDetail" asp-route-id="@item.Id">
+                                        @if (item.Image != null && @item.Image.Length > 0)
+                                        {
+                                            <img class="primary-img" src="data:image/png;base64,@Convert.ToBase64String(item.Image)" alt="single-product">
+                                            <img class="secondary-img" src="data:image/png;base64,@Convert.ToBase64String(item.Image)" alt="single-product">
+                                        }
+                                        else
+                                        {
+                                            <img class="primary-img" src="" alt="single-product">
+                                            <img class="secondary-img" src="" alt="single-product">
+                                        }
+                                    </a>
+
+                                </div>
+                                <!-- Product Image End -->
+                                <!-- Product Content Start -->
+                                <div class="pro-content">
+                                    <div class="pro-info">
+                                        <h4><a href="#">@item.ProductName</a></h4>
+                                        <p><span class="price">$@item.Price</span></p>
+                                    </div>
+                                    <div class="pro-actions">
+                                        @Html.AntiForgeryToken()
+                                        <div class="actions-primary">
+                                            <a class="add-to-cart" data-product-id="@item.Id" title="Add to Cart"> + Add To Cart</a>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- Product Content End -->
+                            </div>
+                        }
+                        <!-- Single Product End -->
+                    </div>
+                    <!-- Arrivals Product Activation End Here -->
+                </div>
+                <!-- #fshion End Here -->
+</div>
+<!-- Arrivals Products Area End Here -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"></script>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $(".add-to-cart").click(function () {
+                var productId = $(this).data("product-id");
+                var token = $('input[name="__RequestVerificationToken"]').val(); // Lấy mã thông báo CSRF
+
+                $.ajax({
+                    url: "/Cart?handler=AddToCart", // Đảm bảo bạn đang truy cập đúng URL của trang Razor Page
+                    data: {
+                        productId: productId,
+                        quantity: 1,
+                        __RequestVerificationToken: token // Truyền mã thông báo CSRF
+                    },
+                    type: "POST",
+                    success: function (data) {
+                        toastr.success("Add to Cart Successfully");
+
+                        
+                    },
+                    error: function () {
+                        alert("An error occurred while adding the product to the cart.");
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,102 @@
+﻿@page "/register"
+@model BookSellingApp.Pages.Login.RegisterModel
+@{
+    Layout = "_Layout";
+}
+<!-- Breadcrumb Start -->
+<div class="breadcrumb-area mt-30">
+    <div class="container">
+        <div class="breadcrumb">
+            <ul class="d-flex align-items-center">
+                <li><a href="index.html">Home</a></li>
+                <li class="active"><a href="register.html">Register</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Container End -->
+</div>
+<!-- Breadcrumb End -->
+<!-- Register Account Start -->
+<div class="register-account ptb-100 ptb-sm-60">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="register-title">
+                    <h3 class="mb-10">REGISTER ACCOUNT</h3>
+                    <p class="mb-10">If you already have an account with us, please login at the login page.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Row End -->
+        <div class="row">
+            <div class="col-sm-12">
+                <form class="form-register" method="post">
+                    <fieldset>
+                        <legend>Your Personal Details</legend>
+                        <div class="form-group d-md-flex align-items-md-center">
+                            <label class="control-label col-md-2" asp-for="user.Username"></label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="f-name" placeholder="User Name" asp-for="user.Username">
+                                <span asp-validation-for="user.Username" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                        <div class="form-group d-md-flex align-items-md-center">
+                            <label class="control-label col-md-2" asp-for="user.Email"></label>
+                            <div class="col-md-10">
+                                <input type="email" class="form-control" id="email" placeholder="Email" asp-for="user.Email">
+                                <span asp-validation-for="user.Email" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                        <div class="form-group d-md-flex align-items-md-center">
+                            <label class="control-label col-md-2" asp-for="user.Phonenumber"></label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="number" placeholder="Phone Number" asp-for="user.Phonenumber">
+                                <span asp-validation-for="user.Phonenumber" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                        <div class="form-group d-md-flex align-items-md-center">
+                            <label class="control-label col-md-2" asp-for="user.Address"></label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="number" asp-for="user.Address" placeholder="Address">
+                                <span asp-validation-for="user.Address" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Your Password</legend>
+                        <div class="form-group d-md-flex align-items-md-center">
+                            <label class="control-label col-md-2" asp-for="user.Password"></label>
+                            <div class="col-md-10">
+                                <input type="password" class="form-control" id="pwd" placeholder="Password" asp-for="user.Password">
+                                <span asp-validation-for="user.Password" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                        <div class="form-group d-md-flex align-items-md-center">
+                            <label class="control-label col-md-2" for="pwd-confirm" asp-for="user.ConfirmPassword"></label>
+                            <div class="col-md-10">
+                                <input type="password" class="form-control" id="pwd-confirm" placeholder="Confirm password" asp-for="user.ConfirmPassword">
+                                <span asp-validation-for="user.ConfirmPassword" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div class="terms">
+                        <div class="float-md-right">
+
+                            <input type="submit" value="Continue" class="return-customer-btn">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Row End -->
+    </div>
+    <!-- Container End -->
+</div>
+<!-- Register Account End -->

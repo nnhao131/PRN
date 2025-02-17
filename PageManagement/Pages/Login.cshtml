@@ -1,0 +1,14 @@
+﻿@page "/login"
+@model PageManagement.Pages.LoginModel
+@{
+    Layout = "";
+}
+<link href="~/css/login.css" type="text/css" asp-append-version="true" rel="stylesheet">
+<div class="login">
+    <h1>Login</h1>
+    <form method="post">
+        <input type="text" name="username" placeholder="Username" required="required" asp-for="input.Username" />
+        <input type="password" name="password" placeholder="Password" required="required" asp-for="input.Password" />
+        <button  type="submit" class="btn btn-primary btn-block btn-large">Let me in.</button>
+    </form>
+</div>

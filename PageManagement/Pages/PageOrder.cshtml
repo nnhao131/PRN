@@ -1,0 +1,198 @@
+﻿@page
+@model PageManagement.Pages.PageOrderModel
+@{
+}
+<div class="content-page">
+    <div class="content">
+        <!-- Start Content-->
+        <div class="container-fluid">
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box">
+                        <h4 class="page-title">Order List</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- start row -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="scroll-horizontal-datatable" class="table w-100 nowrap">
+                                <thead>
+                                    <tr class="th-all">
+                                        <th>ID</th>
+                                        <th>ID user</th>
+                                        <th>TotalPrice</th>
+                                        
+                                        <th>Order Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                               
+                                <tbody>
+                                    @foreach (var item in Model.orders)
+                                    {
+                                        <tr class="td-all3">
+                                            <td>@item.Id</td>
+                                            <td>@item.IdUser</td>
+                                            <td>@item.TotalPrice</td>
+                                            @if(item.OrderStatus == "Pending")
+                                            {
+                                                <td style="color:yellow">@item.OrderStatus</td>
+                                            }else
+                                            {
+                                                <td style="color:green">@item.OrderStatus</td>
+                                            }
+
+                                            <td class="btn-all4">
+                                                <div class="btn-all">
+                                                    <div class="col-4">
+                                                        <div class="mt-3">
+                                                            <div class="button-list">
+                                                                @if (item.OrderStatus == "Pending")
+                                                                {
+                                                                    @Html.AntiForgeryToken()
+                                                                    <button type="button" class="btn btn-info waves-effect waves-light mr-1 clickButton" data-order-id="@item.Id" id="GetUpdate">
+                                                                        <i class="icon-check"></i>
+                                                                    </button>
+                                                                }
+
+                                                                <button type="button" class="btn btn-purple waves-effect waves-light mr-1" data-toggle="modal" id="GetDetail" data-order-id="@item.Id"
+                                                                        data-target="#full-details">
+                                                                    <i class="mdi mdi-exclamation"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                   
+                                </tbody>
+                                    </table>
+                </div> <!-- end card body-->
+            </div> <!-- end card -->
+        </div><!-- end col-->
+    </div>
+    <!-- end row -->
+    <!-- full-details -->
+    <div id="full-details" class="modal fade" tabindex="-1" role="dialog"
+         aria-labelledby="full-width-modalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-full">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="full-width-modalLabel">Product Details</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                 <form id="myForm">
+                <div class="modal-body">
+                                <div class="form-details">
+                                    
+                                    <div class="element-1">
+                                        <div class="ele-details">
+                                            <div class="ele">
+                                                <h4 class="mt-3">
+                                                    <a href="extras-profile.html" class="text-dark">
+                                                        ORDER ID:
+                                                        <span id="orderId"></span>
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        </div>
+                                        <div class="ele-details">
+                                            <div class="ele">
+                                                <h4 class="mt-3">
+                                                    <a href="extras-profile.html" class="text-dark">
+                                                        Order Date:
+                                                        <span id="orderDate"></span>
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div class="ele">
+                                                <h4 class="mt-3">
+                                                    <a href="extras-profile.html" class="text-dark">
+                                                        Total Price:
+                                                        <span id="totalPrice"></span>
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                           
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary waves-effect"
+                            data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+                 </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+</div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+            
+            $(document).ready(function () {
+                $("[id^='GetUpdate']").click(function () {
+                    var orderid = $(this).data("order-id");
+                    var token = $('input[name="__RequestVerificationToken"]').val();
+                  
+                    $.ajax({
+                        type: "POST",
+                        url: "/PageOrder?handler=Update",
+                        data: { id: orderid, __RequestVerificationToken: token },
+                        success: function (data) {
+                            toastr.success("Successfully");
+                            reloadData();
+                        },
+                        error: function (error) {
+                            console.log("id: " + orderid)
+                            console.error("Có lỗi xảy ra: " + error.statusText);
+                        }
+                    });
+                });
+
+            });
+            $(document).ready(function () {
+                $("[id^='GetDetail']").click(function () {
+                    var orderid = $(this).data("order-id");
+                    var token = $('input[name="__RequestVerificationToken"]').val();
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/PageOrder?handler=Detail",
+                        data: { id: orderid, __RequestVerificationToken: token },
+                        success: function (data) {
+                            var dateOrder = new Date(data.dateOrder);
+                            var formattedDate = dateOrder.toISOString();
+                            $("#orderId").text(orderid);
+                            $("#orderDate").text(formattedDate);
+                            $("#totalPrice").text(data.totalPrice);
+                            console.log(data);
+                            
+                        },
+                        error: function (error) {
+                            console.log("id: " + orderid)
+                            console.error("Có lỗi xảy ra: " + error.statusText);
+                        }
+                    });
+                });
+
+            });
+            function reloadData() {
+
+                setTimeout(function () {
+                    $.get("/PageOrder", function (data) {
+                        // Cập nhật phần tử có id là "your-table-container" với dữ liệu mới
+                        location.reload(true);
+                        $("#scroll-horizontal-datatable").html(data);
+                    });
+                }, 1000);
+            }
+</script>

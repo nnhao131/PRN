@@ -1,0 +1,126 @@
+﻿@page
+@model BookSellingApp.Pages.Profile.IndexModel
+@{
+    <script>
+        <style>
+                .centered - button {
+            display: flex;
+            justify - content: center;
+            align - items: center;
+            height: 100vh; /* Đảm bảo nút nằm giữa màn hình dọc */
+        }
+        </style>
+    </script>
+}
+<!-- checkout-area start -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <div class="checkbox-form mb-sm-40">
+                <h3>Profile</h3>
+                <div class="row">
+                    <form method="post" class="col-md-6">
+                        <div class="col-md-12">
+                            <div class="checkout-form-list mb-30">
+                                <label>Edit Profile</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="checkout-form-list mb-30">
+                                <label>Address <span class="required">*</span></label>
+                                <input type="text" placeholder="Street address" asp-for="GetUser.Address" value="@Model.GetUser.Address">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="checkout-form-list mb-30">
+                                <label>Email Address <span class="required">*</span></label>
+                                <input type="email" placeholder="Email.." asp-for="GetUser.Email" value="@Model.GetUser.Email">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="checkout-form-list mb-30">
+                                <label>Phone  <span class="required">*</span></label>
+                                <input type="text" placeholder="Phone" asp-for="GetUser.Phonenumber" value="@Model.GetUser.Phonenumber">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="checkout-form-list mb-30" style="display: flex; justify-content: center;align-items: center;">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                    <form method="post" asp-page-handler="Pass" class="col-md-6">
+                        <div class="col-md-12">
+                            <div class="checkout-form-list mb-30">
+                                <label>Change Password</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="checkout-form-list mb-30">
+                                <label>Old Password</label>
+                                <input type="password" name="OldPass" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="checkout-form-list mb-30">
+                                <label>New Password</label>
+                                <input type="password" name="NewPass" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="checkout-form-list mb-30">
+                                <label>Re-enter password</label>
+                                <input type="password" name="CfPassword" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="checkout-form-list mb-30" style="display: flex; justify-content: center;align-items: center;">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <h3>History</h3>
+           
+                
+                <table class="table col-md-6">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Total Price</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in Model.GetOrder)
+                        {
+                            <tr>
+                                <th scope="row">@item.Id</th>
+                                <td>@item.TotalPrice</td>
+                                <td>@item.DateOrder</td>
+                            @if (item.OrderStatus == "Pending")
+                            {
+                                <td style="color:yellow">@item.OrderStatus</td>
+                            }else
+                            {
+                                <td style="color:green">@item.OrderStatus</td>
+                            }
+
+                            </tr>
+                        }
+                       
+
+                    </tbody>
+                </table>
+           
+        </div>
+    </div>
+
+    
+</div>

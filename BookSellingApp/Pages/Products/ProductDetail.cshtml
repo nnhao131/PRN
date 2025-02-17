@@ -1,0 +1,124 @@
+﻿@page
+@model BookSellingApp.Pages.Products.ProductDetailModel
+@{
+    Layout = "_Layout";
+}
+<!-- Breadcrumb Start -->
+<div class="breadcrumb-area mt-30">
+    <div class="container">
+        <div class="breadcrumb">
+            <ul class="d-flex align-items-center">
+                <li><a href="/Index">Home</a></li>
+                <li><a href="/Products">Shop</a></li>
+                <li class="active"><a href="product.html">Products</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Container End -->
+</div>
+<!-- Breadcrumb End -->
+<!-- Product Thumbnail Start -->
+<div class="main-product-thumbnail ptb-100 ptb-sm-60">
+    <div class="container">
+        <div class="thumb-bg">
+            <div class="row">
+                <!-- Main Thumbnail Image Start -->
+                <div class="col-lg-5 mb-all-40">
+                    <!-- Thumbnail Large Image start -->
+                    <div class="tab-content">
+                        <div id="thumb1" class="tab-pane fade show active">
+                            <a data-fancybox="images" href="data:image/png;base64,@Convert.ToBase64String(Model.products.Image)"><img src="data:image/png;base64,@Convert.ToBase64String(Model.products.Image)" alt="product-view"></a>
+                        </div>
+                       
+                    </div>
+                    <!-- Thumbnail Large Image End -->
+                   
+                </div>
+                <!-- Main Thumbnail Image End -->
+                <!-- Thumbnail Description Start -->
+                <div class="col-lg-7">
+                    <div class="thubnail-desc fix">
+                        <h3 class="product-header">@Model.products.ProductName</h3>
+                        
+                        <div class="pro-price mtb-30">
+                            <p class="d-flex align-items-center"><span class="price">$@Model.products.Price</span></p>
+                        </div>
+                        <p class="mb-20 pro-desc-details">@Model.products.Description</p>
+                       
+                        <div class="box-quantity d-flex hot-product2">
+                            
+                            <div class="pro-actions">
+                                @Html.AntiForgeryToken()
+                                <div class="actions-primary">
+                                    <a class="add-to-cart" data-product-id="@Model.products.Id" title="" data-original-title="Add to Cart"> + Add To Cart</a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="pro-ref mt-20">
+                            <p><span class="in-stock"><i class="ion-checkmark-round"></i> IN STOCK</span></p>
+                        </div>
+                        
+                    </div>
+                </div>
+                <!-- Thumbnail Description End -->
+            </div>
+            <!-- Row End -->
+        </div>
+    </div>
+    <!-- Container End -->
+</div>
+<!-- Product Thumbnail End -->
+<!-- Product Thumbnail Description Start -->
+<div class="thumnail-desc pb-100 pb-sm-60">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <ul class="main-thumb-desc nav tabs-area" role="tablist">
+                    <li><a class="active" data-toggle="tab" href="#dtail">Product Details</a></li>
+                    
+                </ul>
+                <!-- Product Thumbnail Tab Content Start -->
+                <div class="tab-content thumb-content border-default">
+                    <div id="dtail" class="tab-pane fade show active">
+                        <p> @Model.products.Description</p>
+                    </div>
+                    
+                    </div>
+                </div>
+                <!-- Product Thumbnail Tab Content End -->
+            </div>
+        </div>
+        <!-- Row End -->
+    </div>
+    <!-- Container End -->
+</div>
+<!-- Product Thumbnail Description End -->
+@section scripts{
+
+    <script>
+    $(document).ready(function () {
+        $(".add-to-cart").click(function () {
+            var productId = $(this).data("product-id");
+            var token = $('input[name="__RequestVerificationToken"]').val(); // Lấy mã thông báo CSRF
+
+            $.ajax({
+                url: "/Cart?handler=AddToCart", // Đảm bảo bạn đang truy cập đúng URL của trang Razor Page
+                data: {
+                    productId: productId,
+                    quantity: 1,
+                    __RequestVerificationToken: token // Truyền mã thông báo CSRF
+                },
+                type: "POST",
+                success: function (data) {
+                    toastr.success("Add to Cart Successfully");
+                },
+                error: function () {
+                    alert("An error occurred while adding the product to the cart.");
+                }
+            });
+        });
+    });
+    </script>
+
+}
