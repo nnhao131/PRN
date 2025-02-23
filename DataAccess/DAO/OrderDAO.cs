@@ -125,5 +125,41 @@ namespace DataAccess.DAO
             }
            
         }
+
+        public async Task<int> GetTotalOrders()
+        {
+            using(var context = new DbBookStoreContext())
+            return await context.Orders.CountAsync();
+        }
+
+        public async Task<decimal> GetTotalRevenue()
+        {
+            using(var context = new DbBookStoreContext())
+            return await context.Orders.Where(o => o.OrderStatus == "successfully").SumAsync(o => o.TotalPrice ?? 0);
+        }
+
+
+        public async Task<int> GetNewOrdersInDays(int days)
+        {
+            using (var context = new DbBookStoreContext())
+            {
+                var startDate = DateTime.Now.AddDays(-days);
+                return await context.Orders
+                    .Where(o => o.DateOrder >= startDate)
+                    .CountAsync();
+            }
+        }
+
+        public async Task<decimal> GetRevenueInDays(int days)
+        {
+            using(var context = new DbBookStoreContext()) { 
+            var startDate = DateTime.Now.AddDays(-days);
+            return await context.Orders
+                .Where(o => o.DateOrder >= startDate && o.OrderStatus == "successfully")
+                .SumAsync(o => o.TotalPrice ?? 0);
+            }
+        }
+
+
     }
 }

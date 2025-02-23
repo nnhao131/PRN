@@ -27,5 +27,6 @@ namespace DataAccess.IRipository.IUser
         Task<User> UpdateUser(User user,int id);
         Task<User> ChChangePass(string newpass,int id);
         Task<User> GetUserByID(int id);
+        Task<int> GetTotalUser();
     }
 }

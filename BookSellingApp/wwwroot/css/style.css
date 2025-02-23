@@ -3279,6 +3279,35 @@ ul.tag-list > li > a {
     vertical-align: middle;
 }
 
+}
+
+.container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+    background: #E62E04 !important;
+    color: #fff !important;
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.btn-primary {
+    background: #E62E04;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #c62804;
+ }
+
+.text-primary {
+    color: #E62E04 !important;
+}
+
+
 /*----------------------------------------*/
 /* 21. Forgot Password CSS
 /*----------------------------------------*/
