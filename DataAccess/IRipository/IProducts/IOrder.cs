@@ -18,6 +18,9 @@ namespace DataAccess.IRipository.IProducts
         Task<Order> UpdateOrder(int id);
         Task<Order>GetOrderByID(int idOrder);
         Task<List<Order>> GetOrderByIdUser(int idUser);
-        
+        Task<int>GetTotalOrder();
+        Task<decimal> GetTotalRevenue();
+        Task<int>GetOrdersInDay(int day);
+        Task<decimal>GetRevenueInDay(int day);
     }
 }

@@ -25,14 +25,13 @@ namespace DataAccess.Ripository.Products
         public Task<Product> CreateProduct(Product product) => ProductDAO.Instance.CreateProduct(product);
 
         public Task<Product> UpdateProduct(Product product) =>ProductDAO.Instance.UpdateProduct(product);
-       
-
+     
         public Task<bool> DeleteProduct(int id) => ProductDAO.Instance.deleteProduct(id);
        
-
         public Task<List<Category>> GetAllCategories() => ProductDAO.Instance.GetAllCategories();
 
         public Task<List<ProductDTO>> GetcateName(string nameCate) => ProductDAO.Instance.GetcateName(nameCate);
-        
+
+        public Task<int> GetTotalProduct() => ProductDAO.Instance.GetTotalProduct();
     }
 }

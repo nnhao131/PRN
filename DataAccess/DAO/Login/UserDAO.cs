@@ -252,5 +252,13 @@ namespace DataAccess.DAO.Login
             return false;
 
         }
+
+        public async Task<int> GetTotalUser()
+        {
+            using(var context = new DbBookStoreContext())
+            {
+                return await context.Users.CountAsync();
+            }
+        }
     }
 }

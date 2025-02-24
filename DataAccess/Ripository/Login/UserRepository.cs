@@ -55,6 +55,6 @@ namespace DataAccess.Ripository.Login
 
         public Task<User> LockUnLockUser(int id) => UserDAO.Instance.LockUnLockUser(id);
 
-
+        public Task<int> GetTotalUser() => UserDAO.Instance.GetTotalUser();
     }
 }

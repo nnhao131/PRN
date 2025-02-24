@@ -328,6 +328,14 @@ namespace DataAccess.DAO.Product
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<int> GetTotalProduct()
+        {
+            using(var context = new DbBookStoreContext())
+            {
+                return await context.Products.CountAsync();
+            }
+        }
         
     }
 }
